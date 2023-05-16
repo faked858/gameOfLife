@@ -42,13 +42,13 @@ public class Main {
             break;
             case "q": quit();
             break;
-            default: System.out.println("Sorry wrong input");
+            default: System.out.println("Sorry wrong input, please try again");
             break;
         }
     }
 
     public void displayBoard(){
-        System.out.println('\u000c');//ckears screen
+        System.out.println('\u000c');//clears screen
         for (int i = 0; i < rows; i++){//x axis
             for(int j = 0; j < cols; j++){//y axis
                 //System.out.print("*"+i);Scanner keyboard = new Scanner(System.in);
@@ -56,13 +56,14 @@ public class Main {
             }
             System.out.println("");//new line
         }
-       
+        
     }
 
     public void coords(){
         //int cellCoords = keyboard.nextInt();
-        System.out.println("you have selected a");
-        System.out.println("select which cell you would like change state in this form: (x,y)");
+        System.out.println("you have selected c");
+        System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
+        
         System.out.println("coords has been run");
     }
 
