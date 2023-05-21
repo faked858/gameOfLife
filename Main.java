@@ -60,18 +60,23 @@ public class Main {
     }
 
     public void coords(){
+        boolean coordCheck=true;
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
         String cellCoords = keyboard.nextLine();//user input for coordinates
-        if(cellCoords.length()>5||cellCoords.length()<3){//check if user inputed string is at least the right length, will check other factors later
-
-            System.out.println("Sorry wrong input, please try again. If you are using brackets try removing them");
+        String coordValues[];
+        int x;
+        int y;
+           if(cellCoords.length()>5 || cellCoords.length()<3){//check if user inputed string is at least the right length, will check other factors later
+            System.out.println("Sorry wrong input, please  select c and try again. If you are using brackets try removing them");
+            menu();
         }else{//if the use input is correct length
-            cellCoords.split(",");
-            System.out.println(cellCoords);
+            coordValues=cellCoords.split(",");
+            x=Integer.parseInt(coordValues[0]);
+            y=Integer.parseInt(coordValues[1]);
+            System.out.println(String.format("Your coordinates are %d,%d",x,y));
             System.out.println("coords has been run");
         }
-
     }
 
     public void genAdvance(){
