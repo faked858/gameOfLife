@@ -8,16 +8,15 @@ import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class Main {
-    static final int BOARDSIZE = 20;
-    static int rows = BOARDSIZE;
-    static int cols = BOARDSIZE;
-    Scanner keyboard = new Scanner(System.in);
-    String[][] boardArr = new String[rows][cols];
-    int x;
+    static final int B_SIZE = 20;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    Scanner keyboard = new Scanner(System.in);//keyboard input
+    int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
+    int x;//cell coordinates used later
     int y;
+    String dCell=". ";//dead cell
+    String lCell="0 ";//living cell
     public Main(){
         displayBoard();
-        instructions();
         menu();
     }
 
@@ -28,7 +27,7 @@ public class Main {
         System.out.println("Any living cell with more than three neighbours dies, as if by overpopulation");
         System.out.println("Any dead cell with exacty three living neighbours becomes a living cell, as if by repopulation");
         System.out.println("Here are the actions you can take");
-        System.out.println("c - changes cell state '0' is off and '*' is on");
+        System.out.println("c - changes cell state '"+dCell+"' is off and '"+lCell+"' is on");
         System.out.println("d - advances a generation");
         System.out.println("a - advances 10 generations");
         System.out.println("q - quit");
@@ -39,58 +38,70 @@ public class Main {
         String input = keyboard.nextLine().toLowerCase();//all inputs to lower case
         switch(input){
             case "c": coords();
-            break;
+                break;
             case "d": genAdvance();
-            break;
+                break;
             case "a": loopAdvance();
-            break;
+                break;
             case "q": quit();
-            break;
+                break;
             default: System.out.println("Sorry wrong input, please try again");
-            break;
+                break;
         }
     }
 
     public void displayBoard(){
         System.out.print('\u000c');//clears screen
-        for (int i = 0; i < rows; i++){//x axis
-            for(int j = 0; j < cols; j++){//y axis
-                boardArr[i][j]="0";//what dead cells look like
-                //System.out.print("*"+i);Scanner keyboard = new Scanner(System.in);//was used for debugging
-                System.out.print(boardArr[i][j] + " ");//print array
+        for (int i = 0; i < B_SIZE; i++){//x axis
+            for(int j = 0; j < B_SIZE; j++){//y axis
+                if(boardArr[i][j]==0){
+                    System.out.print(dCell);//dead cell
+                }else{//if cell isnt dead, print living cell
+                    System.out.print(lCell);//alive cell
+                }
             }
             System.out.println("");//new line
         }
+        instructions();
     }
 
     public void coords(){
         boolean coordCheck=true;
+        int farCell = B_SIZE-1;
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
-        String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates
+        System.out.println("The board size is "+B_SIZE+"x"+B_SIZE);
+        System.out.println("however because computers count from 0, "+farCell+" is the furthest you can enter coordinates for");
+        String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates into array
         while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks use input is correct
             System.out.println("sorry wrong input, please try again");
             cellCoords = keyboard.nextLine().split(",");//user input again
         }
         x=Integer.parseInt(cellCoords[0]);//once its verified user input, set the cell coords to user input 
         y=Integer.parseInt(cellCoords[1]);
+        boardArr[x][y]=1;
+        displayBoard();
+        System.out.println("you have set cell "+x+","+y+" to alive");
+        System.out.println("to set the state of another cell, press c again");
     }
 
     boolean coordsCheck(String[] integers)
     {
-    try{
-        //trys to parseInt user input
-        int coordX=Integer.parseInt(integers[0]);
-        int coordY=Integer.parseInt(integers[1]);
         try{
-            System.out.println(boardArr[coordX-1][coordY-1]);//trys to print user input
-            return true;
-        } catch (IndexOutOfBoundsException e){//if user input is out of bounds of array, then it cant print it so it returns false
+            //trys to parseInt user input
+            int coordX=Integer.parseInt(integers[0]);
+            int coordY=Integer.parseInt(integers[1]);
+            try{
+                System.out.println(boardArr[coordX][coordY]);//trys to print user input
+                return true;
+            } catch (IndexOutOfBoundsException e){//if user input is out of bounds of array, then it cant print it so it returns false
+                System.out.println("IndexOutOfBoundsException");//for debugging
+                return false;
+            }
+        } catch(NumberFormatException e){//if an error accurs while trying to parseInt user input, returns false
+            System.out.println("NumberFormatException");//for debugging
             return false;
         }
-     } catch(NumberFormatException e){//if an error accurs while trying to parseInt user input, returns false
-        return false;
-     }
     }
 
     public void genAdvance(){
