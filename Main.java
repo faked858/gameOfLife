@@ -4,13 +4,17 @@
  */
 
 import java.util.Scanner; //keyboard input
+import java.lang.IndexOutOfBoundsException;//Array bounds checking
+import java.lang.NumberFormatException;//user input checking
 
 public class Main {
-    //static final int BOARDSIZE = 20;
-    static int rows = 20;
-    static int cols = 40;
+    static final int BOARDSIZE = 20;
+    static int rows = BOARDSIZE;
+    static int cols = BOARDSIZE;
     Scanner keyboard = new Scanner(System.in);
-    int[][] boardArr = new int[rows][cols];
+    String[][] boardArr = new String[rows][cols];
+    int x;
+    int y;
     public Main(){
         displayBoard();
         instructions();
@@ -48,35 +52,45 @@ public class Main {
     }
 
     public void displayBoard(){
-        System.out.println('\u000c');//clears screen
+        System.out.print('\u000c');//clears screen
         for (int i = 0; i < rows; i++){//x axis
             for(int j = 0; j < cols; j++){//y axis
-                //System.out.print("*"+i);Scanner keyboard = new Scanner(System.in);
-                System.out.print(boardArr[i][j] + "");//print array
+                boardArr[i][j]="0";//what dead cells look like
+                //System.out.print("*"+i);Scanner keyboard = new Scanner(System.in);//was used for debugging
+                System.out.print(boardArr[i][j] + " ");//print array
             }
             System.out.println("");//new line
         }
-
     }
 
     public void coords(){
         boolean coordCheck=true;
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
-        String cellCoords = keyboard.nextLine();//user input for coordinates
-        String coordValues[];
-        int x;
-        int y;
-           if(cellCoords.length()>5 || cellCoords.length()<3){//check if user inputed string is at least the right length, will check other factors later
-            System.out.println("Sorry wrong input, please  select c and try again. If you are using brackets try removing them");
-            menu();
-        }else{//if the use input is correct length
-            coordValues=cellCoords.split(",");
-            x=Integer.parseInt(coordValues[0]);
-            y=Integer.parseInt(coordValues[1]);
-            System.out.println(String.format("Your coordinates are %d,%d",x,y));
-            System.out.println("coords has been run");
+        String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates
+        while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks use input is correct
+            System.out.println("sorry wrong input, please try again");
+            cellCoords = keyboard.nextLine().split(",");//user input again
         }
+        x=Integer.parseInt(cellCoords[0]);//once its verified user input, set the cell coords to user input 
+        y=Integer.parseInt(cellCoords[1]);
+    }
+
+    boolean coordsCheck(String[] integers)
+    {
+    try{
+        //trys to parseInt user input
+        int coordX=Integer.parseInt(integers[0]);
+        int coordY=Integer.parseInt(integers[1]);
+        try{
+            System.out.println(boardArr[coordX-1][coordY-1]);//trys to print user input
+            return true;
+        } catch (IndexOutOfBoundsException e){//if user input is out of bounds of array, then it cant print it so it returns false
+            return false;
+        }
+     } catch(NumberFormatException e){//if an error accurs while trying to parseInt user input, returns false
+        return false;
+     }
     }
 
     public void genAdvance(){
