@@ -77,12 +77,13 @@ public class Main {
             System.out.println("sorry wrong input, please try again");
             cellCoords = keyboard.nextLine().split(",");//user input again
         }
-        x=Integer.parseInt(cellCoords[0]);//once its verified user input, set the cell coords to user input 
-        y=Integer.parseInt(cellCoords[1]);
-        boardArr[x][y]=1;
-        displayBoard();
+        x=Integer.parseInt(cellCoords[1]);//once its verified user input, set the cell coords to user input 
+        y=Integer.parseInt(cellCoords[0]);
+        boardArr[x][y]=1;//set cell to alive
+        displayBoard();//refresh board to display new cell
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
+        menu();
     }
 
     boolean coordsCheck(String[] integers)
@@ -103,7 +104,17 @@ public class Main {
             return false;
         }
     }
-
+    
+    public void neghbourCheck(){
+        int count=0;
+        if(boardArr[x-1][y]==1)count++;
+        if(boardArr[x-1][y-1]==1)count++;
+        if(boardArr[x-1][y+1]==1)count++;
+        if(boardArr[x+1][y]==1)count++;
+        if(boardArr[x][y]==1)count++;
+        if(boardArr[x][y]==1)count++;
+    }
+    
     public void genAdvance(){
         System.out.println("genAdvance has been run");
     }
