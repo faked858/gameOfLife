@@ -11,8 +11,6 @@ public class Main {
     static final int B_SIZE = 20;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
-    int x;//cell coordinates used later
-    int y;
     String dCell=". ";//dead cell
     String lCell="0 ";//living cell
     public Main(){
@@ -52,9 +50,9 @@ public class Main {
 
     public void displayBoard(){
         System.out.print('\u000c');//clears screen
-        for (int i = 0; i < B_SIZE; i++){//x axis
-            for(int j = 0; j < B_SIZE; j++){//y axis
-                if(boardArr[i][j]==0){
+        for (int y = 0; y < B_SIZE; y++){//x axis
+            for(int x = 0; x < B_SIZE; x++){//y axis
+                if(boardArr[x][y]==0){
                     System.out.print(dCell);//dead cell
                 }else{//if cell isnt dead, print living cell
                     System.out.print(lCell);//alive cell
@@ -77,10 +75,11 @@ public class Main {
             System.out.println("sorry wrong input, please try again");
             cellCoords = keyboard.nextLine().split(",");//user input again
         }
-        x=Integer.parseInt(cellCoords[1]);//once its verified user input, set the cell coords to user input 
-        y=Integer.parseInt(cellCoords[0]);
+        int x=Integer.parseInt(cellCoords[0]);//once its verified user input, set the cell coords to user input 
+        int y=Integer.parseInt(cellCoords[1]);
         boardArr[x][y]=1;//set cell to alive
         displayBoard();//refresh board to display new cell
+        neghbourCheck(x,y);
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
         menu();
@@ -105,18 +104,23 @@ public class Main {
         }
     }
     
-    public void neghbourCheck(){
+    public int neghbourCheck(int cellX, int cellY){
         int count=0;
-        if(boardArr[x-1][y]==1)count++;
-        if(boardArr[x-1][y-1]==1)count++;
-        if(boardArr[x-1][y+1]==1)count++;
-        if(boardArr[x+1][y]==1)count++;
-        if(boardArr[x][y]==1)count++;
-        if(boardArr[x][y]==1)count++;
+        if(boardArr[cellX-1][cellY]==1)count++;
+        if(boardArr[cellX-1][cellY-1]==1)count++;
+        if(boardArr[cellX-1][cellY+1]==1)count++;
+        if(boardArr[cellX+1][cellY]==1)count++;
+        if(boardArr[cellX][cellY-1]==1)count++;
+        if(boardArr[cellX][cellY+1]==1)count++;
+        if(boardArr[cellX+1][cellY+1]==1)count++;
+        if(boardArr[cellX+1][cellY-1]==1)count++;
+        System.out.println("cell neghbours is "+count);
+        return count;
     }
     
     public void genAdvance(){
         System.out.println("genAdvance has been run");
+        
     }
 
     public void loopAdvance(){
