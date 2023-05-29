@@ -37,7 +37,7 @@ public class Main {
         switch(input){
             case "c": coords();
                 break;
-            case "d": genAdvance();
+            case "d": //genAdvance();
                 break;
             case "a": loopAdvance();
                 break;
@@ -50,8 +50,8 @@ public class Main {
 
     public void displayBoard(){
         System.out.print('\u000c');//clears screen
-        for (int y = 0; y < B_SIZE; y++){//x axis
-            for(int x = 0; x < B_SIZE; x++){//y axis
+        for (int y = 0; y < B_SIZE; y++){//y axis
+            for(int x = 0; x < B_SIZE; x++){//x axis
                 if(boardArr[x][y]==0){
                     System.out.print(dCell);//dead cell
                 }else{//if cell isnt dead, print living cell
@@ -118,9 +118,14 @@ public class Main {
         return count;
     }
     
-    public void genAdvance(){
+    public void genAdvance(int cellX, int cellY){
         System.out.println("genAdvance has been run");
-        
+        int[][] futureB = new int[B_SIZE][B_SIZE];
+         for (int y = 0; y < B_SIZE; y++){
+            for(int x = 0; x < B_SIZE; x++){
+                //if(){}
+            }
+         }
     }
 
     public void loopAdvance(){
