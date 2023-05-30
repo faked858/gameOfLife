@@ -14,10 +14,17 @@ public class Main {
     String dCell=". ";//dead cell
     String lCell="0 ";//living cell
     public Main(){
-        displayBoard();
-        menu();
+        while(true){
+            displayBoard();
+            menu();
+        }
     }
-
+    
+    public void genAdvanceMenu(){
+        //while(){
+        //WIP   
+        //}
+    }
     void instructions(){
         System.out.println("Welcome to game of life. The game of life has simple rules");
         System.out.println("Any living cell with less than two live neighbours dies, as if by underpopulation");
@@ -37,7 +44,7 @@ public class Main {
         switch(input){
             case "c": coords();
                 break;
-            case "d": //genAdvance();
+            case "d": genAdvance();
                 break;
             case "a": loopAdvance();
                 break;
@@ -60,7 +67,7 @@ public class Main {
             }
             System.out.println("");//new line
         }
-        instructions();
+        instructions();//print instructions
     }
 
     public void coords(){
@@ -82,7 +89,6 @@ public class Main {
         neghbourCheck(x,y);
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
-        menu();
     }
 
     boolean coordsCheck(String[] integers)
@@ -103,29 +109,57 @@ public class Main {
             return false;
         }
     }
-    
-    public int neghbourCheck(int cellX, int cellY){
+
+    public int neghbourCheck(int cellX, int cellY){//checks for living cell neghbours
         int count=0;
-        if(boardArr[cellX-1][cellY]==1)count++;
-        if(boardArr[cellX-1][cellY-1]==1)count++;
-        if(boardArr[cellX-1][cellY+1]==1)count++;
-        if(boardArr[cellX+1][cellY]==1)count++;
-        if(boardArr[cellX][cellY-1]==1)count++;
-        if(boardArr[cellX][cellY+1]==1)count++;
-        if(boardArr[cellX+1][cellY+1]==1)count++;
-        if(boardArr[cellX+1][cellY-1]==1)count++;
-        System.out.println("cell neghbours is "+count);
+        if(getCell(cellX-1,cellY)==1)count++;
+        if(getCell(cellX-1,cellY-1)==1)count++;
+        if(getCell(cellX-1,cellY+1)==1)count++;
+        if(getCell(cellX+1,cellY)==1)count++;
+        if(getCell(cellX,cellY-1)==1)count++;
+        if(getCell(cellX,cellY+1)==1)count++;
+        if(getCell(cellX+1,cellY+1)==1)count++;
+        if(getCell(cellX+1,cellY-1)==1)count++;
+        //System.out.println("cell neghbours is "+count);//debugging
         return count;
     }
-    
-    public void genAdvance(int cellX, int cellY){
+
+    public int getCell(int cellX, int cellY){
+        try{
+            return boardArr[cellX][cellY];//trys to return cell position 
+        }catch(ArrayIndexOutOfBoundsException e){//if cell position is out of bounds, return -1
+            //System.out.println("cell neghours out of bounds");//debuging
+            return -1;
+        }
+    }
+
+    public void setCell(int cellX, int cellY,int cellVal){
+        try{
+            boardArr[cellX][cellY]=cellVal;//trys to set given cell to alive
+        }catch(ArrayIndexOutOfBoundsException e){//if cell is out of bounds, this prevents it from crashing
+
+        }
+    }
+
+    public void genAdvance(){
         System.out.println("genAdvance has been run");
         int[][] futureB = new int[B_SIZE][B_SIZE];
-         for (int y = 0; y < B_SIZE; y++){
-            for(int x = 0; x < B_SIZE; x++){
-                //if(){}
+        for (int y = 0; y < B_SIZE; y++){
+            for(int x = 0; x < B_SIZE; x++){//run through array
+                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==1){
+                    futureB[x][y]=0;
+                }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==0){
+                    futureB[x][y]=1;
+                }else{
+                    futureB[x][y]=getCell(x,y);
+                }
             }
-         }
+        }
+        for(int i = 0; i < B_SIZE; i++){
+            for(int j = 0; j < B_SIZE; j++){
+                boardArr[j][i]=futureB[j][i];
+            }
+        }
     }
 
     public void loopAdvance(){
