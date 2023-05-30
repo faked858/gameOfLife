@@ -14,17 +14,10 @@ public class Main {
     String dCell=". ";//dead cell
     String lCell="0 ";//living cell
     public Main(){
-        while(true){
-            displayBoard();
-            menu();
-        }
+        displayBoard();
+        menu();
     }
-    
-    public void genAdvanceMenu(){
-        //while(){
-        //WIP   
-        //}
-    }
+
     void instructions(){
         System.out.println("Welcome to game of life. The game of life has simple rules");
         System.out.println("Any living cell with less than two live neighbours dies, as if by underpopulation");
@@ -51,6 +44,7 @@ public class Main {
             case "q": quit();
                 break;
             default: System.out.println("Sorry wrong input, please try again");
+            menu();
                 break;
         }
     }
@@ -89,6 +83,7 @@ public class Main {
         neghbourCheck(x,y);
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
+        menu();
     }
 
     boolean coordsCheck(String[] integers)
@@ -137,36 +132,48 @@ public class Main {
         try{
             boardArr[cellX][cellY]=cellVal;//trys to set given cell to alive
         }catch(ArrayIndexOutOfBoundsException e){//if cell is out of bounds, this prevents it from crashing
-
+            //System.out.println("cell out of bounds");//debugging
         }
     }
 
     public void genAdvance(){
-        System.out.println("genAdvance has been run");
-        int[][] futureB = new int[B_SIZE][B_SIZE];
+        //System.out.println("genAdvance has been run");//debugging
+        int[][] futureB = new int[B_SIZE][B_SIZE];//new 2D array to put cell changes on
         for (int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
-                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==1){
-                    futureB[x][y]=0;
-                }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==0){
-                    futureB[x][y]=1;
+                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==1){//check cell logic
+                    futureB[x][y]=0;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies 
+                }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==0){//more cell logic
+                    futureB[x][y]=1;//if a dead cell has 3 nehgbours, it becomes alive
                 }else{
-                    futureB[x][y]=getCell(x,y);
+                    futureB[x][y]=getCell(x,y);//else, cell stays the same
                 }
             }
         }
         for(int i = 0; i < B_SIZE; i++){
-            for(int j = 0; j < B_SIZE; j++){
-                boardArr[j][i]=futureB[j][i];
+            for(int j = 0; j < B_SIZE; j++){//run through array
+                boardArr[j][i]=futureB[j][i];//set changes to board
             }
         }
+        displayBoard();//display new changes
+        menu();
     }
 
     public void loopAdvance(){
-        System.out.println("loopAdvance");
+        //System.out.println("loopAdvance");//debugging
+        int loopAmount=1000;
+        try{
+           for(int i=0; i <= loopAmount; i++){
+            Thread.sleep(100);
+            genAdvance();
+            //System.out.println("loopAdvance");//debugging
+        } 
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 
     public void quit(){
-        System.out.println("quit");
+        System.exit(0);
     }
 }
