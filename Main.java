@@ -44,7 +44,7 @@ public class Main {
             case "q": quit();
                 break;
             default: System.out.println("Sorry wrong input, please try again");
-            menu();
+            //menu();
                 break;
         }
     }
@@ -161,19 +161,13 @@ public class Main {
 
     public void loopAdvance(){
         //System.out.println("loopAdvance");//debugging
-        int loopAmount=1000;
-        try{
-           for(int i=0; i <= loopAmount; i++){
-            Thread.sleep(100);
+        int loopAmount=1000000000;
+           for(int i=0; i < loopAmount; i++){
             genAdvance();
             //System.out.println("loopAdvance");//debugging
         } 
-        }catch(Exception e){
-            System.out.println(e);
-        }
     }
 
     public void quit(){
-        System.exit(0);
     }
 }
