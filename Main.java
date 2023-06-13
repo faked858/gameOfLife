@@ -2,33 +2,28 @@
  * Author: Parker Rogers
  * version: 15/05/2023
  */
-
+//my game of life project
 import java.util.Scanner; //keyboard input
 import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class Main {
-    static final int B_SIZE = 20;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 45;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     String dCell=". ";//dead cell
     String lCell="0 ";//living cell
+    int farCell = B_SIZE-1;//used in mutliple methods
     public Main(){
         displayBoard();
         menu();
     }
 
     void instructions(){
-        System.out.println("Welcome to game of life. The game of life has simple rules");
         System.out.println("Any living cell with less than two live neighbours dies, as if by underpopulation");
         System.out.println("Any living cell with two or three live neighbours stays alive");
         System.out.println("Any living cell with more than three neighbours dies, as if by overpopulation");
         System.out.println("Any dead cell with exacty three living neighbours becomes a living cell, as if by repopulation");
-        System.out.println("Here are the actions you can take");
-        System.out.println("c - changes cell state '"+dCell+"' is off and '"+lCell+"' is on");
-        System.out.println("d - advances a generation");
-        System.out.println("a - advances a set amount generations");
-        System.out.println("q - quit");
     }
 
     public void menu(){
@@ -36,6 +31,8 @@ public class Main {
         boolean quitGame = false;
         while(!quitGame){
             switch(keyboard.nextLine().toLowerCase()){//waits for user input and all inputs to lower case
+                case "e": instructions();
+                    break;
                 case "c": coords();
                     break;
                 case "d": genAdvance();
@@ -45,9 +42,8 @@ public class Main {
                 case "q": quitGame = true;
                     break;
                 default: System.out.println("Sorry wrong input, please try again");
-                    menu();
                     break;
-            }
+            }//runs user specified function based on their input
         }
     }
 
@@ -63,26 +59,31 @@ public class Main {
             }
             System.out.println("");//new line
         }
-        instructions();//print instructions
+        System.out.println("Welcome to the game of life");
+        System.out.println("e - rules and instructions");
+        System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
+        System.out.println("d - advances a generation");
+        System.out.println("a - advances a set amount generations");
+        System.out.println("q - quit");
     }
 
-    public void coords(){
+    public void coords(){//checks if user inputed coordinates are legitimate, if so turns on user selected cell
         boolean coordCheck=true;
-        int farCell = B_SIZE-1;
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
         System.out.println("The board size is "+B_SIZE+"x"+B_SIZE);
         System.out.println("however because computers count from 0, "+farCell+" is the furthest you can enter coordinates for");
+        //helps the user understand how to set cell state
         String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates into array
-        while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks use input is correct
+        while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks user input is correct
             System.out.println("sorry wrong input, please try again");
             cellCoords = keyboard.nextLine().split(",");//user input again
         }
-        int x=Integer.parseInt(cellCoords[0]);//once its verified user input, set the cell coords to user input 
+        int x=Integer.parseInt(cellCoords[0]); 
         int y=Integer.parseInt(cellCoords[1]);
+        //once its verified user input, set the cell coords to user input
         boardArr[x][y]=1;//set cell to alive
         displayBoard();//refresh board to display new cell
-        neghbourCheck(x,y);
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
     }
@@ -93,13 +94,22 @@ public class Main {
             //trys to parseInt user input
             int coordX=Integer.parseInt(integers[0]);
             int coordY=Integer.parseInt(integers[1]);
+            /*
             try{
-                System.out.println(boardArr[coordX][coordY]);//trys to print user input
-                return true;
+            System.out.println(boardArr[coordX][coordY]);//trys to print user input
+            return true;
             } catch (IndexOutOfBoundsException e){//if user input is out of bounds of array, then it cant print it so it returns false
-                System.out.println("IndexOutOfBoundsException");//for debugging
-                return false;
+            System.out.println("IndexOutOfBoundsException");//for debugging
+            return false;
             }
+             */
+            if(getCell(coordX,coordY)==-1){
+                return false;  
+            }else{
+               return true; 
+            }
+
+            
         } catch(NumberFormatException e){//if an error accurs while trying to parseInt user input, returns false
             System.out.println("NumberFormatException");//for debugging
             return false;
@@ -121,23 +131,14 @@ public class Main {
     }
 
     public int getCell(int cellX, int cellY){
-        try{
-            return boardArr[cellX][cellY];//trys to return cell position 
-        }catch(ArrayIndexOutOfBoundsException e){//if cell position is out of bounds, return -1
-            //System.out.println("cell neghours out of bounds");//debuging
+        if(boardArr[cellX][cellY] < farCell){
+            return boardArr[cellX][cellY];
+        }else{
             return -1;
         }
     }
 
-    public void setCell(int cellX, int cellY,int cellVal){
-        try{
-            boardArr[cellX][cellY]=cellVal;//trys to set given cell to alive
-        }catch(ArrayIndexOutOfBoundsException e){//if cell is out of bounds, this prevents it from crashing
-            //System.out.println("cell out of bounds");//debugging
-        }
-    }
-
-    public void genAdvance(){
+    public void genAdvance(){//advances a ganeration and does cell neghbour logic
         //System.out.println("genAdvance has been run");//debugging
         int[][] futureB = new int[B_SIZE][B_SIZE];//new 2D array to put cell changes on
         for (int y = 0; y < B_SIZE; y++){
@@ -158,13 +159,13 @@ public class Main {
         }
         displayBoard();//display new changes
     }
-    
+
     public Boolean loopAdvance(){//nullable
         System.out.println("You selected a, please type an intager of how many generations you would like to advance");
         String userInput= keyboard.nextLine();
         int loopAmount = 0;
         try{
-            loopAmount = Integer.parseInt(userInput);
+            loopAmount = Integer.parseInt(userInput);//checks user input
         }catch(NumberFormatException e){
             System.out.println("sorry wrong input, please select a and try again");
             return false;
@@ -174,9 +175,5 @@ public class Main {
             //System.out.println("loopAdvance");//debugging
         }
         return null;//returns null
-    }
-
-    public boolean quit(){
-        return true;
     }
 }
