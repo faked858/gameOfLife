@@ -27,25 +27,27 @@ public class Main {
         System.out.println("Here are the actions you can take");
         System.out.println("c - changes cell state '"+dCell+"' is off and '"+lCell+"' is on");
         System.out.println("d - advances a generation");
-        System.out.println("a - advances 10 generations");
+        System.out.println("a - advances a set amount generations");
         System.out.println("q - quit");
     }
 
     public void menu(){
         //which function needs to be run
-        String input = keyboard.nextLine().toLowerCase();//all inputs to lower case
-        switch(input){
-            case "c": coords();
-                break;
-            case "d": genAdvance();
-                break;
-            case "a": loopAdvance();
-                break;
-            case "q": quit();
-                break;
-            default: System.out.println("Sorry wrong input, please try again");
-            //menu();
-                break;
+        boolean quitGame = false;
+        while(!quitGame){
+            switch(keyboard.nextLine().toLowerCase()){//waits for user input and all inputs to lower case
+                case "c": coords();
+                    break;
+                case "d": genAdvance();
+                    break;
+                case "a": loopAdvance();
+                    break;
+                case "q": quitGame = true;
+                    break;
+                default: System.out.println("Sorry wrong input, please try again");
+                    menu();
+                    break;
+            }
         }
     }
 
@@ -83,7 +85,6 @@ public class Main {
         neghbourCheck(x,y);
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
-        menu();
     }
 
     boolean coordsCheck(String[] integers)
@@ -156,18 +157,26 @@ public class Main {
             }
         }
         displayBoard();//display new changes
-        menu();
     }
-
-    public void loopAdvance(){
-        //System.out.println("loopAdvance");//debugging
-        int loopAmount=1000000000;
-           for(int i=0; i < loopAmount; i++){
+    
+    public Boolean loopAdvance(){//nullable
+        System.out.println("You selected a, please type an intager of how many generations you would like to advance");
+        String userInput= keyboard.nextLine();
+        int loopAmount = 0;
+        try{
+            loopAmount = Integer.parseInt(userInput);
+        }catch(NumberFormatException e){
+            System.out.println("sorry wrong input, please select a and try again");
+            return false;
+        }
+        for(int i=0; i < loopAmount; i++){
             genAdvance();
             //System.out.println("loopAdvance");//debugging
-        } 
+        }
+        return null;//returns null
     }
 
-    public void quit(){
+    public boolean quit(){
+        return true;
     }
 }
