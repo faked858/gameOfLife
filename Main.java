@@ -8,7 +8,7 @@ import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class Main {
-    static final int B_SIZE = 45;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 35;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     String dCell=". ";//dead cell
@@ -68,7 +68,7 @@ public class Main {
     }
 
     public void coords(){//checks if user inputed coordinates are legitimate, if so turns on user selected cell
-        boolean coordCheck=true;
+        //boolean coordCheck=true;
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
         System.out.println("The board size is "+B_SIZE+"x"+B_SIZE);
@@ -94,24 +94,13 @@ public class Main {
             //trys to parseInt user input
             int coordX=Integer.parseInt(integers[0]);
             int coordY=Integer.parseInt(integers[1]);
-            /*
-            try{
-            System.out.println(boardArr[coordX][coordY]);//trys to print user input
-            return true;
-            } catch (IndexOutOfBoundsException e){//if user input is out of bounds of array, then it cant print it so it returns false
-            System.out.println("IndexOutOfBoundsException");//for debugging
-            return false;
-            }
-             */
             if(getCell(coordX,coordY)==-1){
                 return false;  
             }else{
-               return true; 
+                return true; 
             }
-
-            
         } catch(NumberFormatException e){//if an error accurs while trying to parseInt user input, returns false
-            System.out.println("NumberFormatException");//for debugging
+            //System.out.println("NumberFormatException");//for debugging
             return false;
         }
     }
@@ -130,12 +119,13 @@ public class Main {
         return count;
     }
 
-    public int getCell(int cellX, int cellY){
-        if(boardArr[cellX][cellY] < farCell){
-            return boardArr[cellX][cellY];
-        }else{
-            return -1;
+    public int getCell(int cellX, int cellY){//checks if coordinates are within the board array
+        if(cellX >= 0 && cellX < B_SIZE && cellY >= 0 && cellY < B_SIZE){//check if coordinates are within boardArr, 0 ensures no values go into the negitives
+            if(boardArr[cellX][cellY] < farCell){
+                return boardArr[cellX][cellY];//return user inputed coordinates
+            }
         }
+        return -1;
     }
 
     public void genAdvance(){//advances a ganeration and does cell neghbour logic
@@ -160,7 +150,7 @@ public class Main {
         displayBoard();//display new changes
     }
 
-    public Boolean loopAdvance(){//nullable
+    public Boolean loopAdvance(){//nullable. advances an amount of generations set by the user
         System.out.println("You selected a, please type an intager of how many generations you would like to advance");
         String userInput= keyboard.nextLine();
         int loopAmount = 0;
@@ -171,6 +161,11 @@ public class Main {
             return false;
         }
         for(int i=0; i < loopAmount; i++){
+            try {
+                Thread.sleep(10);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
+            } catch (InterruptedException e) {
+                //catches InterruptedException if anything is run while waiting
+            }
             genAdvance();
             //System.out.println("loopAdvance");//debugging
         }
