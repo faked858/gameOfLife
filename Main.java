@@ -47,11 +47,13 @@ public class Main {
         }
     }
 
-    public void displayBoard(){
+    public void displayBoard(){//runs through array and prints cells and tells user basic commands
         System.out.print('\u000c');//clears screen
-        for (int y = 0; y < B_SIZE; y++){//y axis
+        for (int y = -1; y < B_SIZE; y++){//y axis
+            System.out.print(y+((y>9) ? " " : "  "));
             for(int x = 0; x < B_SIZE; x++){//x axis
-                if(boardArr[x][y]==0){
+                if(y==-1) System.out.print(x+" ");
+                else if(boardArr[x][y]==0){
                     System.out.print(dCell);//dead cell
                 }else{//if cell isnt dead, print living cell
                     System.out.print(lCell);//alive cell
@@ -88,8 +90,7 @@ public class Main {
         System.out.println("to set the state of another cell, press c again");
     }
 
-    boolean coordsCheck(String[] integers)
-    {
+    boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints
         try{
             //trys to parseInt user input
             int coordX=Integer.parseInt(integers[0]);
