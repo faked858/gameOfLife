@@ -11,8 +11,8 @@ public class Main {
     static final int B_SIZE = 35;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
-    String dCell=". ";//dead cell
-    String lCell="0 ";//living cell
+    String dCell=" . ";//dead cell
+    String lCell=" 0 ";//living cell
     int farCell = B_SIZE-1;//used in mutliple methods
     public Main(){
         displayBoard();
@@ -49,11 +49,15 @@ public class Main {
 
     public void displayBoard(){//runs through array and prints cells and tells user basic commands
         System.out.print('\u000c');//clears screen
-        for (int y = -1; y < B_SIZE; y++){//y axis
-            System.out.print(y+((y>9) ? " " : "  "));
+        System.out.print("x  ");//puts x in the corner because otherwise the numbers printed along hte top of the board would be offset
+        for(int i =0; i< B_SIZE; i++){
+            System.out.print(i+((i>9) ? " " : "  "));//prints numbers along the top of the board for user cell coord identification
+        }
+        System.out.println("");//prints new line for board
+        for (int y = 0; y < B_SIZE; y++){//y axis
+            System.out.print(y+((y>9) ? "" : " "));//prints numbers along the left side of the board to help users idendify specific cell coordinates 
             for(int x = 0; x < B_SIZE; x++){//x axis
-                if(y==-1) System.out.print(x+" ");
-                else if(boardArr[x][y]==0){
+                if(boardArr[x][y]==0){
                     System.out.print(dCell);//dead cell
                 }else{//if cell isnt dead, print living cell
                     System.out.print(lCell);//alive cell
@@ -72,7 +76,7 @@ public class Main {
     public void coords(){//checks if user inputed coordinates are legitimate, if so turns on user selected cell
         //boolean coordCheck=true;
         System.out.println("you have selected c");
-        System.out.println("select which cell you would like change state by using coordinates in this form: (x,y)");
+        System.out.println("select which cell you would like change state by using coordinates in this form: x,y");
         System.out.println("The board size is "+B_SIZE+"x"+B_SIZE);
         System.out.println("however because computers count from 0, "+farCell+" is the furthest you can enter coordinates for");
         //helps the user understand how to set cell state
@@ -81,7 +85,7 @@ public class Main {
             System.out.println("sorry wrong input, please try again");
             cellCoords = keyboard.nextLine().split(",");//user input again
         }
-        int x=Integer.parseInt(cellCoords[0]); 
+        int x=Integer.parseInt(cellCoords[0]);//actually parseInts user input after all the neccesary checks
         int y=Integer.parseInt(cellCoords[1]);
         //once its verified user input, set the cell coords to user input
         boardArr[x][y]=1;//set cell to alive
@@ -107,7 +111,7 @@ public class Main {
     }
 
     public int neghbourCheck(int cellX, int cellY){//checks for living cell neghbours
-        int count=0;
+        int count=0;//amount of living neghbours around each cell 
         if(getCell(cellX-1,cellY)==1)count++;
         if(getCell(cellX-1,cellY-1)==1)count++;
         if(getCell(cellX-1,cellY+1)==1)count++;
@@ -135,7 +139,7 @@ public class Main {
         for (int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
                 if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==1){//check cell logic
-                    futureB[x][y]=0;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies 
+                    futureB[x][y]=0;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies. 
                 }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==0){//more cell logic
                     futureB[x][y]=1;//if a dead cell has 3 nehgbours, it becomes alive
                 }else{
@@ -154,14 +158,14 @@ public class Main {
     public Boolean loopAdvance(){//nullable. advances an amount of generations set by the user
         System.out.println("You selected a, please type an intager of how many generations you would like to advance");
         String userInput= keyboard.nextLine();
-        int loopAmount = 0;
+        int loopAmount = 0;//will be set by user to determine how many times to run the loop
         try{
             loopAmount = Integer.parseInt(userInput);//checks user input
         }catch(NumberFormatException e){
             System.out.println("sorry wrong input, please select a and try again");
             return false;
         }
-        for(int i=0; i < loopAmount; i++){
+        for(int i = 0; i < loopAmount; i++){
             try {
                 Thread.sleep(10);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
             } catch (InterruptedException e) {
