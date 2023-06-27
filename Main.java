@@ -8,7 +8,7 @@ import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class Main {
-    static final int B_SIZE = 35;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     String dCell=" . ";//dead cell
@@ -25,11 +25,12 @@ public class Main {
         System.out.println("Any living cell with more than three neighbours dies, as if by overpopulation");
         System.out.println("Any dead cell with exacty three living neighbours becomes a living cell, as if by repopulation");
     }
-    
+
     void welcome(){//first thing player will read
         System.out.println("Welcome to the game of life");
         System.out.println("e - rules and instructions");
         System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
+        System.out.println("x - generates a board with a random pattern of cells");
         System.out.println("d - advances a generation");
         System.out.println("a - advances a set amount generations");
         System.out.println("q - quit");
@@ -44,6 +45,8 @@ public class Main {
                     break;
                 case "c": coords();
                     break;
+                case "x": randomCell();
+                    break;
                 case "d": genAdvance();
                     break;
                 case "a": loopAdvance();
@@ -54,6 +57,19 @@ public class Main {
                     break;
             }//runs user specified function based on their input
         }
+    }
+
+    public void randomCell(){//sets random cells to alive
+        for(int y = 0; y < B_SIZE; y++){
+            for(int x = 0; x < B_SIZE; x++){//run through array
+                boardArr[x][y]=0;//kills any living cells first. Otherwise if run enough times, live cells would fill the board
+                int randomCell = (int) (Math.random()*3);//creates random number 0, 1, or 2
+                if(randomCell == 1){//one in 3 chance of live cell
+                    boardArr[x][y]=1;
+                }
+            }
+        }
+        displayBoard();//display new changes
     }
 
     public void displayBoard(){//runs through array and prints cells and tells user basic commands
@@ -158,10 +174,11 @@ public class Main {
         }
         displayBoard();//display new changes
     }
-    
+
     public Boolean loopAdvance(){//nullable. advances an amount of generations set by the user
         System.out.println("You selected a, please type an intager of how many generations you would like to advance");
         String userInput= keyboard.nextLine();
+        int SLEEP_TIME=100;//amount of miliseconds to wait between each generation
         int loopAmount = 0;//will be set by user to determine how many times to run the loop
         try{
             loopAmount = Integer.parseInt(userInput);//checks user input
@@ -171,7 +188,7 @@ public class Main {
         }
         for(int i = 0; i < loopAmount; i++){
             try {
-                Thread.sleep(100);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
+                Thread.sleep(SLEEP_TIME);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
             } catch (InterruptedException e) {
                 //catches InterruptedException if anything is run while waiting
             }
