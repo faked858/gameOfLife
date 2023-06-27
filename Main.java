@@ -12,7 +12,7 @@ public class Main {
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     String dCell=" . ";//dead cell
-    String lCell=" 0 ";//living cell
+    String lCell=" ■ ";//living cell
     int farCell = B_SIZE-1;//used in mutliple methods
     public Main(){
         displayBoard();
@@ -24,6 +24,15 @@ public class Main {
         System.out.println("Any living cell with two or three live neighbours stays alive");
         System.out.println("Any living cell with more than three neighbours dies, as if by overpopulation");
         System.out.println("Any dead cell with exacty three living neighbours becomes a living cell, as if by repopulation");
+    }
+    
+    void welcome(){//first thing player will read
+        System.out.println("Welcome to the game of life");
+        System.out.println("e - rules and instructions");
+        System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
+        System.out.println("d - advances a generation");
+        System.out.println("a - advances a set amount generations");
+        System.out.println("q - quit");
     }
 
     public void menu(){
@@ -49,7 +58,7 @@ public class Main {
 
     public void displayBoard(){//runs through array and prints cells and tells user basic commands
         System.out.print('\u000c');//clears screen
-        System.out.print("x  ");//puts x in the corner because otherwise the numbers printed along hte top of the board would be offset
+        System.out.print("   ");//helps with offset of numbers along top
         for(int i =0; i< B_SIZE; i++){
             System.out.print(i+((i>9) ? " " : "  "));//prints numbers along the top of the board for user cell coord identification
         }
@@ -65,12 +74,7 @@ public class Main {
             }
             System.out.println("");//new line
         }
-        System.out.println("Welcome to the game of life");
-        System.out.println("e - rules and instructions");
-        System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
-        System.out.println("d - advances a generation");
-        System.out.println("a - advances a set amount generations");
-        System.out.println("q - quit");
+        welcome();
     }
 
     public void coords(){//checks if user inputed coordinates are legitimate, if so turns on user selected cell
@@ -154,7 +158,7 @@ public class Main {
         }
         displayBoard();//display new changes
     }
-
+    
     public Boolean loopAdvance(){//nullable. advances an amount of generations set by the user
         System.out.println("You selected a, please type an intager of how many generations you would like to advance");
         String userInput= keyboard.nextLine();
@@ -167,7 +171,7 @@ public class Main {
         }
         for(int i = 0; i < loopAmount; i++){
             try {
-                Thread.sleep(10);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
+                Thread.sleep(100);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
             } catch (InterruptedException e) {
                 //catches InterruptedException if anything is run while waiting
             }
