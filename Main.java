@@ -8,7 +8,7 @@ import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class Main {
-    static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 30;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     String dCell=" . ";//dead cell
@@ -19,7 +19,8 @@ public class Main {
         menu();
     }
 
-    void instructions(){
+    void rules(){//tells user cell neghbour logic
+        displayBoard();//used to refresh console, in case a user decides to show rules multiple times and causes them to have to scroll up to see the board
         System.out.println("Any living cell with less than two live neighbours dies, as if by underpopulation");
         System.out.println("Any living cell with two or three live neighbours stays alive");
         System.out.println("Any living cell with more than three neighbours dies, as if by overpopulation");
@@ -28,7 +29,7 @@ public class Main {
 
     void welcome(){//first thing player will read
         System.out.println("Welcome to the game of life");
-        System.out.println("e - rules and instructions");
+        System.out.println("e - show rules");
         System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
         System.out.println("x - generates a board with a random pattern of cells");
         System.out.println("d - advances a generation");
@@ -41,7 +42,7 @@ public class Main {
         boolean quitGame = false;
         while(!quitGame){
             switch(keyboard.nextLine().toLowerCase()){//waits for user input and all inputs to lower case
-                case "e": instructions();
+                case "e": rules();
                     break;
                 case "c": coords();
                     break;
