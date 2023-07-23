@@ -8,7 +8,7 @@ import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class GameOfLife{
-    static final int B_SIZE = 30;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     String dCell=" . ";//dead cell
@@ -34,6 +34,7 @@ public class GameOfLife{
         System.out.println("e - show rules");
         System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
         System.out.println("x - fills the board with a random pattern of cells");
+        System.out.println("w - clear board");
         System.out.println("d - advances a generation");
         System.out.println("a - advances a set amount generations");
         System.out.println("q - quit");
@@ -49,6 +50,8 @@ public class GameOfLife{
                 case "c": coords();
                     break;
                 case "x": randomCell();
+                    break;
+                case "w": clearBoard();
                     break;
                 case "d": genAdvance();
                     break;
@@ -97,6 +100,15 @@ public class GameOfLife{
         }
         welcome();
     }
+    
+    public void clearBoard(){//clears the board incase the user wants a fresh board
+        for(int y = 0; y < B_SIZE; y++){
+            for(int x = 0; x < B_SIZE; x++){//run through array
+                boardArr[x][y] = killCell;//set all cells to 0
+            }
+        }
+        displayBoard();//display new changes
+    }
 
     public void coords(){//checks if user inputed coordinates are legitimate, if so turns on user selected cell
         //boolean coordCheck=true;
@@ -119,7 +131,7 @@ public class GameOfLife{
         System.out.println("to set the state of another cell, press c again");
     }
 
-    boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints
+    boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints. passes in an array of ints
         try{
             //trys to parseInt user input
             int coordX=Integer.parseInt(integers[0]);
