@@ -1,21 +1,22 @@
 /**
  * Author: Parker Rogers
- * version: 15/05/2023
+ * version: 25/07/2023
+ * my game of life project
  */
-//my game of life project
+
 import java.util.Scanner; //keyboard input
 import java.lang.IndexOutOfBoundsException;//Array bounds checking
 import java.lang.NumberFormatException;//user input checking
 
 public class GameOfLife{
-    static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     Scanner keyboard = new Scanner(System.in);//keyboard input
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
-    String dCell=" . ";//dead cell
-    String lCell=" ■ ";//living cell
-    static final int killCell = 0;//value for dead cell
-    static final int liveCell = 1;//value for living cell
-    static final int farCell = B_SIZE-1;//used in mutliple methods
+    static final String DEAD_CELL_STR = " . ";//what the board displays for a dead cell
+    static final String LIVE_CELL_STR = " ■ ";//what the board displays for a living cell
+    static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int END_CELL = 0;//value for dead cell
+    static final int LIVE_CELL = 1;//value for living cell
+    static final int FAR_CELL = B_SIZE-1;//used in mutliple methods
     public GameOfLife(){
         displayBoard();
         menu();
@@ -32,7 +33,7 @@ public class GameOfLife{
     void welcome(){//first thing player will read
         System.out.println("Welcome to the game of life");
         System.out.println("e - show rules");
-        System.out.println("c - changes cell state '"+dCell+"' is dead and '"+lCell+"' is alive");
+        System.out.println("c - changes cell state '"+DEAD_CELL_STR+"' is dead and '"+LIVE_CELL_STR+"' is alive");
         System.out.println("x - fills the board with a random pattern of cells");
         System.out.println("w - clear board");
         System.out.println("d - advances a generation");
@@ -66,13 +67,13 @@ public class GameOfLife{
     }
 
     public void randomCell(){//sets random cells to alive
-        int cellChance = 3;//multiplyer for math.random. 3 is default
+        int cellChance = 3;//multiplyer for math.random, meaning one in cellChance for a cell to be alive. 3 is default
         for(int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
-                boardArr[x][y] = killCell;//kills any living cells first. Otherwise if run enough times, live cells would fill the board
+                boardArr[x][y] = END_CELL;//kills any living cells first. Otherwise if run enough times, live cells would fill the board
                 int randomCell = (int) (Math.random()*cellChance);//creates random number 0, 1, or 2
-                if(randomCell == liveCell){//one in 3 chance of live cell
-                    boardArr[x][y] = liveCell;
+                if(randomCell == LIVE_CELL){//one in 3 chance of live cell
+                    boardArr[x][y] = LIVE_CELL;
                 }
             }
         }
@@ -90,10 +91,10 @@ public class GameOfLife{
         for (int y = 0; y < B_SIZE; y++){//y axis
             System.out.print(y+((y>9) ? "" : " "));//prints numbers along the left side of the board to help users idendify specific cell coordinates 
             for(int x = 0; x < B_SIZE; x++){//x axis
-                if(boardArr[x][y]==killCell){
-                    System.out.print(dCell);//dead cell
+                if(boardArr[x][y]==END_CELL){
+                    System.out.print(DEAD_CELL_STR);//dead cell
                 }else{//if cell isnt dead, print living cell
-                    System.out.print(lCell);//alive cell
+                    System.out.print(LIVE_CELL_STR);//alive cell
                 }
             }
             System.out.println("");//new line
@@ -104,7 +105,7 @@ public class GameOfLife{
     public void clearBoard(){//clears the board incase the user wants a fresh board
         for(int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
-                boardArr[x][y] = killCell;//set all cells to 0
+                boardArr[x][y] = END_CELL;//set all cells to 0
             }
         }
         displayBoard();//display new changes
@@ -115,7 +116,7 @@ public class GameOfLife{
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: x,y");
         System.out.println("The board size is "+B_SIZE+"x"+B_SIZE);
-        System.out.println("however because computers count from 0, "+farCell+" is the furthest you can enter coordinates for");
+        System.out.println("however because computers count from 0, "+FAR_CELL+" is the furthest you can enter coordinates for");
         //helps the user understand how to set cell state
         String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates into array
         while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks user input is correct. number 2 is because cellcoords.length will only ever be 2, since its a 2D array.
@@ -125,13 +126,13 @@ public class GameOfLife{
         int x=Integer.parseInt(cellCoords[0]);//actually parseInts user input after all the neccesary checks
         int y=Integer.parseInt(cellCoords[1]);
         //once its verified user input, set the cell coords to user input
-        boardArr[x][y]=liveCell;//set cell to alive
+        boardArr[x][y]=LIVE_CELL;//set cell to alive
         displayBoard();//refresh board to display new cell
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
     }
 
-    boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints. passes in an array of ints
+    boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints
         try{
             //trys to parseInt user input
             int coordX=Integer.parseInt(integers[0]);
@@ -149,21 +150,21 @@ public class GameOfLife{
 
     public int neghbourCheck(int cellX, int cellY){//checks for living cell neghbours
         int count=0;//amount of living neghbours around each cell 
-        if(getCell(cellX-1,cellY)==liveCell)count++;
-        if(getCell(cellX-1,cellY-1)==liveCell)count++;
-        if(getCell(cellX-1,cellY+1)==liveCell)count++;
-        if(getCell(cellX+1,cellY)==liveCell)count++;
-        if(getCell(cellX,cellY-1)==liveCell)count++;
-        if(getCell(cellX,cellY+1)==liveCell)count++;
-        if(getCell(cellX+1,cellY+1)==liveCell)count++;
-        if(getCell(cellX+1,cellY-1)==liveCell)count++;
+        if(getCell(cellX-1,cellY)==LIVE_CELL)count++;
+        if(getCell(cellX-1,cellY-1)==LIVE_CELL)count++;
+        if(getCell(cellX-1,cellY+1)==LIVE_CELL)count++;
+        if(getCell(cellX+1,cellY)==LIVE_CELL)count++;
+        if(getCell(cellX,cellY-1)==LIVE_CELL)count++;
+        if(getCell(cellX,cellY+1)==LIVE_CELL)count++;
+        if(getCell(cellX+1,cellY+1)==LIVE_CELL)count++;
+        if(getCell(cellX+1,cellY-1)==LIVE_CELL)count++;
         //System.out.println("cell neghbours is "+count);//debugging
         return count;
     }
 
     public int getCell(int cellX, int cellY){//checks if coordinates are within the board array
         if(cellX >= 0 && cellX < B_SIZE && cellY >= 0 && cellY < B_SIZE){//check if coordinates are within boardArr, 0 ensures no values go into the negitives
-            if(boardArr[cellX][cellY] < farCell){
+            if(boardArr[cellX][cellY] < FAR_CELL){
                 return boardArr[cellX][cellY];//return user inputed coordinates
             }
         }
@@ -176,10 +177,10 @@ public class GameOfLife{
         for (int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
                 //the numbers 2 and 3 are part of the original rules of the game
-                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==liveCell){//check cell logic
-                    futureB[x][y]=killCell;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies. 
-                }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==killCell){//more cell logic
-                    futureB[x][y]=liveCell;//if a dead cell has 3 nehgbours, it becomes alive
+                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==LIVE_CELL){//check cell logic
+                    futureB[x][y]=END_CELL;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies. 
+                }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==END_CELL){//more cell logic
+                    futureB[x][y]=LIVE_CELL;//if a dead cell has 3 nehgbours, it becomes alive
                 }else{
                     futureB[x][y]=getCell(x,y);//else, cell stays the same
                 }
@@ -205,7 +206,7 @@ public class GameOfLife{
             return false;
         }
         for(int i = 0; i < loopAmount; i++){
-            try {
+            try{
                 Thread.sleep(SLEEP_TIME);//waits a very short period because without waiting, if enough generations are run, the program doesnt have time to print everything before the next gen is run
             } catch (InterruptedException e) {
                 //catches InterruptedException if anything is run while waiting
