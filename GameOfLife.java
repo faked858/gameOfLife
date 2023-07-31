@@ -14,8 +14,8 @@ public class GameOfLife{
     static final String DEAD_CELL_STR = " . ";//what the board displays for a dead cell
     static final String LIVE_CELL_STR = " ■ ";//what the board displays for a living cell
     static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
-    static final int END_CELL = 0;//value for dead cell
-    static final int LIVE_CELL = 1;//value for living cell
+    static final int END_CELL = 0;//int value for dead cell
+    static final int LIVE_CELL = 1;//int value for living cell
     static final int FAR_CELL = B_SIZE-1;//used in mutliple methods
     public GameOfLife(){
         displayBoard();
@@ -126,7 +126,7 @@ public class GameOfLife{
         int x=Integer.parseInt(cellCoords[0]);//actually parseInts user input after all the neccesary checks
         int y=Integer.parseInt(cellCoords[1]);
         //once its verified user input, set the cell coords to user input
-        boardArr[x][y]=LIVE_CELL;//set cell to alive
+        boardArr[x][y] = LIVE_CELL;//set cell to alive
         displayBoard();//refresh board to display new cell
         System.out.println("you have set cell "+x+","+y+" to alive");
         System.out.println("to set the state of another cell, press c again");
@@ -135,9 +135,9 @@ public class GameOfLife{
     boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints
         try{
             //trys to parseInt user input
-            int coordX=Integer.parseInt(integers[0]);
-            int coordY=Integer.parseInt(integers[1]);
-            if(getCell(coordX,coordY)==-1){
+            int coordX = Integer.parseInt(integers[0]);
+            int coordY = Integer.parseInt(integers[1]);
+            if(getCell(coordX,coordY) == -1){
                 return false;  
             }else{
                 return true; 
@@ -177,18 +177,18 @@ public class GameOfLife{
         for (int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
                 //the numbers 2 and 3 are part of the original rules of the game
-                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y)==LIVE_CELL){//check cell logic
-                    futureB[x][y]=END_CELL;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies. 
-                }else if(neghbourCheck(x,y) == 3 && getCell(x,y)==END_CELL){//more cell logic
-                    futureB[x][y]=LIVE_CELL;//if a dead cell has 3 nehgbours, it becomes alive
+                if((neghbourCheck(x,y) < 2 || neghbourCheck(x,y) > 3) && getCell(x,y) == LIVE_CELL){//check cell logic
+                    futureB[x][y] = END_CELL;//if a living cell has less than 2 neghbours more than 3 neghbours, it dies. 
+                }else if(neghbourCheck(x,y) == 3 && getCell(x,y) == END_CELL){//more cell logic
+                    futureB[x][y] = LIVE_CELL;//if a dead cell has 3 nehgbours, it becomes alive
                 }else{
-                    futureB[x][y]=getCell(x,y);//else, cell stays the same
+                    futureB[x][y] = getCell(x,y);//else, cell stays the same
                 }
             }
         }
         for(int i = 0; i < B_SIZE; i++){
             for(int j = 0; j < B_SIZE; j++){//run through array
-                boardArr[j][i]=futureB[j][i];//set changes to board
+                boardArr[j][i] = futureB[j][i];//set changes to board
             }
         }
         displayBoard();//display new changes
@@ -196,11 +196,14 @@ public class GameOfLife{
 
     public Boolean loopAdvance(){//nullable. advances an amount of generations set by the user
         System.out.println("You selected a, please type an intager of how many generations you would like to advance");
-        String userInput= keyboard.nextLine();
-        int SLEEP_TIME=100;//amount of miliseconds to wait between each generation
+        String userInput = keyboard.nextLine();
+        int SLEEP_TIME = 100;//amount of miliseconds to wait between each generation
         int loopAmount;//will be set by user to determine how many times to run the loop
         try{
             loopAmount = Integer.parseInt(userInput);//checks user input
+            if(loopAmount <= 0){//if user decides to try advance negitive generations
+                System.out.println("sorry wrong input, please select a and try again");
+            }
         }catch(NumberFormatException e){
             System.out.println("sorry wrong input, please select a and try again");
             return false;
