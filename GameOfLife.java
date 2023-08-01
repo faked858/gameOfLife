@@ -13,7 +13,7 @@ public class GameOfLife{
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     static final String DEAD_CELL_STR = " . ";//what the board displays for a dead cell
     static final String LIVE_CELL_STR = " ■ ";//what the board displays for a living cell
-    static final int B_SIZE = 34;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 50;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     static final int END_CELL = 0;//int value for dead cell
     static final int LIVE_CELL = 1;//int value for living cell
     static final int FAR_CELL = B_SIZE-1;//used in mutliple methods
@@ -195,14 +195,15 @@ public class GameOfLife{
     }
 
     public Boolean loopAdvance(){//nullable. advances an amount of generations set by the user
-        System.out.println("You selected a, please type an intager of how many generations you would like to advance");
+        System.out.println("You selected a, please input any number from 1 to 1000 of how many generations you would like to advance");
         String userInput = keyboard.nextLine();
         int SLEEP_TIME = 100;//amount of miliseconds to wait between each generation
         int loopAmount;//will be set by user to determine how many times to run the loop
         try{
             loopAmount = Integer.parseInt(userInput);//checks user input
-            if(loopAmount <= 0){//if user decides to try advance negitive generations
+            if(loopAmount <= 0 || loopAmount >= 1000){//if user decides to try advance negitive generations
                 System.out.println("sorry wrong input, please select a and try again");
+                return false;
             }
         }catch(NumberFormatException e){
             System.out.println("sorry wrong input, please select a and try again");
