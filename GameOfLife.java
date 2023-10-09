@@ -13,7 +13,7 @@ public class GameOfLife{
     int[][] boardArr = new int[B_SIZE][B_SIZE];//2d array
     static final String DEAD_CELL_STR = " . ";//what the board displays for a dead cell
     static final String LIVE_CELL_STR = " ■ ";//what the board displays for a living cell
-    static final int B_SIZE = 50;//dont have seperate rows or cols becaues i want my board to be same length for x and y
+    static final int B_SIZE = 30;//dont have seperate rows or cols becaues i want my board to be same length for x and y
     static final int END_CELL = 0;//int value for dead cell
     static final int LIVE_CELL = 1;//int value for living cell
     static final int FAR_CELL = B_SIZE-1;//used in mutliple methods
@@ -22,7 +22,7 @@ public class GameOfLife{
         menu();
     }
 
-    void rules(){//tells user cell neghbour logic
+    public void rules(){//tells user cell neghbour logic
         displayBoard();//used to refresh console, in case a user decides to show rules multiple times and causes them to have to scroll up to see the board
         System.out.println("Any living cell with less than two live neighbours dies, as if by underpopulation");
         System.out.println("Any living cell with two or three live neighbours stays alive");
@@ -30,7 +30,7 @@ public class GameOfLife{
         System.out.println("Any dead cell with exacty three living neighbours becomes a living cell, as if by repopulation");
     }
 
-    void welcome(){//first thing player will read
+    public void welcome(){//first thing player will read
         System.out.println("Welcome to the game of life");
         System.out.println("e - show rules");
         System.out.println("c - changes cell state '"+DEAD_CELL_STR+"' is dead and '"+LIVE_CELL_STR+"' is alive");
@@ -67,12 +67,12 @@ public class GameOfLife{
     }
 
     public void randomCell(){//sets random cells to alive
-        int cellChance = 3;//multiplyer for math.random, meaning one in cellChance for a cell to be alive. 3 is default
+        int cellChance = 3;//multiplyer for math.random, meaning one in cellChance for a cell to be alive. 3 is default so its a one in three chance 
         for(int y = 0; y < B_SIZE; y++){
             for(int x = 0; x < B_SIZE; x++){//run through array
                 boardArr[x][y] = END_CELL;//kills any living cells first. Otherwise if run enough times, live cells would fill the board
-                int randomCell = (int) (Math.random()*cellChance);//creates random number 0, 1, or 2
-                if(randomCell == LIVE_CELL){//one in 3 chance of live cell
+                int randCell = (int) (Math.random()*cellChance);//creates random number 0, 1, or 2
+                if(randCell == LIVE_CELL){//one in 3 chance of live cell
                     boardArr[x][y] = LIVE_CELL;
                 }
             }
@@ -120,7 +120,7 @@ public class GameOfLife{
         //helps the user understand how to set cell state
         String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates into array
         while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks user input is correct. number 2 is because cellcoords.length will only ever be 2, since its a 2D array.
-            System.out.println("sorry wrong input, please try again");
+            System.out.println("sorry wrong input, please try another set of coordinates");
             cellCoords = keyboard.nextLine().split(",");//user input again
         }
         int x=Integer.parseInt(cellCoords[0]);//actually parseInts user input after all the neccesary checks
