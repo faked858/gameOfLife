@@ -33,7 +33,7 @@ public class GameOfLife{
     public void welcome(){//first thing player will read
         System.out.println("Welcome to the game of life");
         System.out.println("e - show rules");
-        System.out.println("c - changes cell state '"+DEAD_CELL_STR+"' is dead and '"+LIVE_CELL_STR+"' is alive");
+        System.out.println("c - toggles cell state '"+DEAD_CELL_STR+"' is dead and '"+LIVE_CELL_STR+"' is alive");
         System.out.println("x - fills the board with a random pattern of cells");
         System.out.println("w - clear board");
         System.out.println("d - advances a generation");
@@ -48,7 +48,7 @@ public class GameOfLife{
             switch(keyboard.nextLine().toLowerCase()){//waits for user input and all inputs to lower case
                 case "e": rules();
                     break;
-                case "c": coords();
+                case "c": cellToggle();
                     break;
                 case "x": randomCell();
                     break;
@@ -111,7 +111,7 @@ public class GameOfLife{
         displayBoard();//display new changes
     }
 
-    public void coords(){//checks if user inputed coordinates are legitimate, if so turns on user selected cell
+    public void cellToggle(){//checks if user inputed coordinates are legitimate
         //boolean coordCheck=true;
         System.out.println("you have selected c");
         System.out.println("select which cell you would like change state by using coordinates in this form: x,y");
@@ -125,11 +125,10 @@ public class GameOfLife{
         }
         int x=Integer.parseInt(cellCoords[0]);//actually parseInts user input after all the neccesary checks
         int y=Integer.parseInt(cellCoords[1]);
-        //once its verified user input, set the cell coords to user input
-        boardArr[x][y] = LIVE_CELL;//set cell to alive
-        displayBoard();//refresh board to display new cell
-        System.out.println("you have set cell "+x+","+y+" to alive");
-        System.out.println("to set the state of another cell, press c again");
+        
+        if(boardArr[x][y]==END_CELL) boardArr[x][y] = LIVE_CELL;
+        else if(boardArr[x][y]==LIVE_CELL) boardArr[x][y] = END_CELL;
+        displayBoard();
     }
 
     boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints
