@@ -28,6 +28,7 @@ public class GameOfLife{
         System.out.println("Any living cell with two or three live neighbours stays alive");
         System.out.println("Any living cell with more than three neighbours dies, as if by overpopulation");
         System.out.println("Any dead cell with exacty three living neighbours becomes a living cell, as if by repopulation");
+        System.out.println("select cells with c, then enter the coordinates of the cell you would like to select. select a live cell to kill it. select a dead cell to turn it on");
     }
 
     public void welcome(){//first thing player will read
@@ -111,12 +112,11 @@ public class GameOfLife{
         displayBoard();//display new changes
     }
 
-    public void cellToggle(){//checks if user inputed coordinates are legitimate
+    public void cellToggle(){//checks if user inputed coordinates are legitimate then toggles selected cells on or off
         //boolean coordCheck=true;
         System.out.println("you have selected c");
-        System.out.println("select which cell you would like change state by using coordinates in this form: x,y");
+        System.out.println("select which cell you would like to toggle by using coordinates in this form: x,y");
         System.out.println("The board size is "+B_SIZE+"x"+B_SIZE);
-        System.out.println("however because computers count from 0, "+FAR_CELL+" is the furthest you can enter coordinates for");
         //helps the user understand how to set cell state
         String[] cellCoords = keyboard.nextLine().split(",");//user input for coordinates into array
         while(cellCoords.length !=2||!coordsCheck(cellCoords)){//checks user input is correct. number 2 is because cellcoords.length will only ever be 2, since its a 2D array.
@@ -126,9 +126,9 @@ public class GameOfLife{
         int x=Integer.parseInt(cellCoords[0]);//actually parseInts user input after all the neccesary checks
         int y=Integer.parseInt(cellCoords[1]);
         
-        if(boardArr[x][y]==END_CELL) boardArr[x][y] = LIVE_CELL;
-        else if(boardArr[x][y]==LIVE_CELL) boardArr[x][y] = END_CELL;
-        displayBoard();
+        if(boardArr[x][y]==END_CELL) boardArr[x][y] = LIVE_CELL;//if the selected cell is dead, set it to alive
+        else if(boardArr[x][y]==LIVE_CELL) boardArr[x][y] = END_CELL;//if the selected cell is alive, set it to dead
+        displayBoard();//display changes
     }
 
     boolean coordsCheck(String[] integers){//checks if user coords are numbers and if so changes them from strings to ints
